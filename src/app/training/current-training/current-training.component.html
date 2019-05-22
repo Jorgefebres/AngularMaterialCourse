@@ -1,0 +1,6 @@
+<section class="current-training" fxLayout="column" fxLayoutAlign="center center">
+    <mat-progress-spinner mode="determinate" [value]="progreso" color="primary"></mat-progress-spinner>
+    <h1>{{progreso}}</h1>
+    <p>Sigue Así!! Tu puedes hacerlo!</p>
+    <button mat-raised-button color="accent" (click)="onStop()">Detener</button>
+</section>

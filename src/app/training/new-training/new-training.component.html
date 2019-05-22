@@ -1,0 +1,18 @@
+<div class="new-training" fxLayout="row" fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="400px">
+    <mat-card-title fxLayoutAlign="center">Tiempo para empezar un ejercicio</mat-card-title>
+    <mat-card-content fxLayoutAlign="center">
+      <mat-form-field>
+        <mat-select placeholder="Ejercicio">
+          <mat-option value="sentadillas">sentadillas</mat-option>
+          <mat-option value="lagartijas">lagartijas</mat-option>
+          <mat-option value="pesas">pesas</mat-option>
+          <mat-option value="zancadillas">zancadillas</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="center">
+      <button type="submit" (click)="onStartTraining()"  mat-button>Empezar</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
