@@ -1,3 +1,35 @@
-<p>
-  past-training works!
-</p>
+<div fxLayoutAlign="center center">
+  <mat-form-field fxFlex="80%">
+    <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Buscar ejercicio">
+  </mat-form-field>
+</div>
+<div fxLayoutAlign="center center">
+  <mat-table [dataSource]="dataSource" matSort fxFlex="95%">
+    <ng-container matColumnDef="date" >
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.date.toDate() | date}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="calories">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Calorias</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.calories | number}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="duration">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Duracion</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.duration | number}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="state">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.state}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef = "let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>
+<div fxLayoutAlign="center center">
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"  fxFlex="95%"></mat-paginator>
+</div>
+
