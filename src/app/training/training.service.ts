@@ -1,3 +1,4 @@
+import { UIService } from 'src/app/shared/iu.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Exercise } from './exercise.model';
 import { Subject } from 'rxjs/Subject';
@@ -18,14 +19,19 @@ export class TrainingService{
   private runningExecise:Exercise;
   private availableExercises:Exercise[]=[];
 
-  constructor(private db: AngularFirestore){}
+  constructor(
+    private db: AngularFirestore,
+    private _UIService:UIService
+    ){}
 
   fetchAvailableExercises(){
+    this._UIService.loadingStateChanged.next(true);
     this.fbSubscriptions.push(this.db
     .collection('availableExercises')
     .snapshotChanges()
     .pipe
     (map(docArray=>{
+      // throw(new Error);
       return docArray.map(doc =>{
         return{
           id: doc.payload.doc.id,
@@ -33,9 +39,14 @@ export class TrainingService{
         };
       });
     }))
-    .subscribe((exercises: Exercise[])=>{
+    .subscribe((exercises: Exercise[])=>{      
+      this._UIService.loadingStateChanged.next(false);
       this.availableExercises = exercises;
       this.exercisesChanged.next([...this.availableExercises]);
+    }, error =>{
+      this._UIService.loadingStateChanged.next(false);
+      this._UIService.showSnackbar('Ocurrió un error al cargar los ejercicios, por favor intente nuevamente despues', null, 3000);
+      this.exercisesChanged.next(null);
     }));
   }
 

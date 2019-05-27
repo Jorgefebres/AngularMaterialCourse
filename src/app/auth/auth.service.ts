@@ -17,7 +17,6 @@ export class AuthService{
     private _router:Router,
     private _afAuth:AngularFireAuth,
     private _trainingService: TrainingService,
-    private _snackBar: MatSnackBar,
     private _uiService: UIService
     ){}
 
@@ -38,24 +37,26 @@ export class AuthService{
     }
 
     registerUser(authData: AuthData){
-      this._afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password).then(result=>{
+      this._uiService.loadingStateChanged.next(true);
+      this._afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+      .then(result=>{
+        this._uiService.loadingStateChanged.next(false);
       })
       .catch(error=>{
-        this._snackBar.open(error.message, null, {
-          duration: 3000
-        })
+        this._uiService.loadingStateChanged.next(false);
+        this._uiService.showSnackbar(error.message, null, 3000);    
       });
     }
     login(authData:AuthData){
-      this._uiService
-
+      this._uiService.loadingStateChanged.next(true);
       this._afAuth.auth
-      .signInWithEmailAndPassword(authData.email, authData.password).then(result=>{
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .then(result=>{
+        this._uiService.loadingStateChanged.next(false);
       })
       .catch(error=>{
-        this._snackBar.open(error.message, null, {
-          duration: 3000
-        })
+        this._uiService.loadingStateChanged.next(false);
+        this._uiService.showSnackbar(error.message, null, 3000);        
       });
     }
     logout(){

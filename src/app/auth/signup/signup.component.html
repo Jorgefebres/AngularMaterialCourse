@@ -45,6 +45,7 @@
     color="primary">
     Acepto los términos y Condiciones.
   </mat-checkbox>
-  <button type="submit" mat-raised-button color="primary" [disabled]="!f.valid">Submit</button>
+  <button *ngIf="!isLoading"  type="submit" mat-raised-button color="primary" [disabled]="!f.valid">Submit</button>
+  <mat-spinner *ngIf="isLoading" ></mat-spinner>
 </form>
 </section>
