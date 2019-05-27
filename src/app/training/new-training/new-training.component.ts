@@ -1,10 +1,14 @@
-import { UIService } from './../../shared/iu.service';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { Exercise } from './../exercise.model';
 import { TrainingService } from './../training.service';
-import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import * as fromTraining from '../training.reducer'
+import * as fromRoot from '../../app.reducer'
+
+import { Store } from '@ngrx/store';
+
 
 
 @Component({
@@ -12,36 +16,24 @@ import { Subscription } from 'rxjs';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
   @Output() empezarEntrenamiento = new EventEmitter<void>()
-  ejercicios:Exercise[];
-  exerciseSubscription: Subscription;
-  isLoading = false;
-  private loadingSubscription:Subscription;
+  exercises$:Observable<Exercise[]>;
+  isLoading$:Observable<Boolean>;
   constructor(
     private _trainingService: TrainingService,
-    private db: AngularFirestore,
-    private _UIService:UIService
+    private _store:Store<fromTraining.State>
     ) { }
 
-  ngOnInit() {
-    this.loadingSubscription =  this._UIService.loadingStateChanged.subscribe(isLoading=>{
-      this.isLoading = isLoading;
-    })
-    this.exerciseSubscription = this._trainingService.exercisesChanged.subscribe(exercises=>
-      {
-        this.ejercicios = exercises;        
-      });
-      this.fetchExercises();    
-  }
-  fetchExercises(){
-    this._trainingService.fetchAvailableExercises();
-  }
-  onStartTraining(form:NgForm){
-    this._trainingService.startExercise(form.value.ejercicio);
-  }
-  ngOnDestroy(){
-    this.exerciseSubscription.unsubscribe();
-    this.loadingSubscription.unsubscribe();
-  }
-}
+    ngOnInit() {
+      this.isLoading$ = this._store.select(fromRoot.getIsLoading);
+      this.exercises$ = this._store.select(fromTraining.getAvailableExercises)
+      this.fetchExercises();
+      }
+      fetchExercises(){
+        this._trainingService.fetchAvailableExercises();
+      }
+      onStartTraining(form:NgForm){
+        this._trainingService.startExercise(form.value.ejercicio);
+      }
+    }
